@@ -1,33 +1,42 @@
 import QtQuick
+import QtQuick.Controls
 
 Text {
     id: icon
 
     property string glyph
-    property bool propagateComposedEvents: true
-    property int size: 24
+    property int size: 18
+    property string tooltip
 
     signal entered
     signal exited
     signal pressed
     signal released
 
-    color: colors.getColor('light')
-    font.family: iconFont.name
+    ToolTip.delay: 500
+    ToolTip.text: tooltip
+    ToolTip.visible: (tooltip !== "" && area.containsMouse)
+    color: area.containsMouse ? colors.getColor('mid') : colors.getColor('light')
+    font.family: awesomeFont.name
     font.pixelSize: size
+    height: size
+    horizontalAlignment: Text.AlignHCenter
     renderType: Text.NativeRendering
     text: glyph
+    width: size
 
     Behavior on color {
         ColorAnimation {
-            duration: 80
+            duration: 50
         }
     }
 
     MouseArea {
+        id: area
+
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        propagateComposedEvents: parent.propagateComposedEvents
+        hoverEnabled: true
 
         onEntered: parent.entered()
         onExited: parent.exited()
